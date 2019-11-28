@@ -1,0 +1,192 @@
+---
+title: "TOTAL EQUAL ADJUSTED AIRCRAFT'S ENGINE PRICE"
+author: "Renni Ekaputri"
+date: "November 25, 2019"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+<style type="text/css">
+.main-container {
+  max-width: 1700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+
+<center>
+|Data Scientist|Business Analyst|Business Intelligence Specialist|Senior Project Management Officer|Senior Project Planning|
+</center>
+
+
+<center>
+|EASA Part M CAMO 145 Technical Service Engineer|Aircraft Asset Management Specialist|
+</center>
+---
+
+General Conclusion
+---
+According to the technical and commercial term of `GTA No. CFM-1-193764669` we may conclude several things.`CFM56-7B24E, CFM56-7B26E, LEAP-1A26, LEAP-1B27, LEAP-1B25` escalation formula as a price escalation shall be calculated from Attachment D prior to Escalation Cap for Spare Engines during the implementation of special allowance. Escalation cap for installed engine and allowances may happened if if price adjustment calculated under Attachment D $\le$ 3% cummulative annual esclation,engine price will be adjusted by the changes escl calculated in attachment D. If $\ge$ 5.5%,the price adjustment due to esclation will be an amount calculated above + 50% of each such different between actual escalation and 5.5%.If CFM delivers a spare engine to customer later than orginally scheduled date,then the rate of escalation applying to the base price relevant spare engine be calculated in accordance to with attachment D and from the original spare engine date, It can cause the escalation suspension and termination for spare engines.
+
+CFM guarantees that for the Guarantee Period Airline's cumulative Engine caused IFSD rate `will not exceed 0.003 per 1,000 EFH`. If at the end of the Guarantee Period the guaranteed rate is exceeded, CFM will provide Airline a credit against future purchases from CFM in the amount of one hundred thousand US dollars `($100,000)` for each qualifying IFSD in excess of the guaranteed rate.
+
+CFM guarantees that, for the Guarantee Period, Airline's cumulative Engine-caused Delay `(in excess of 15 minutes)` and Cancellation rate for revenue flights `will not exceed 0.75 combined events per 1,000 scheduled Aircraft departures`. If at the end of the Guarantee Period the guaranteed rate is exceeded, CFM will provide Airline a credit against future purchases from CFM in the amount of twenty five thousand US dollars (US$25,000) for each qualifying Engine-caused Delay or Cancellation in excess of the guaranteed rate.
+
+EGT guarantee new engines for first 9000EFH/6000EFC without required removal due to exceeding certified max take off EGT limit, with Customer credit `$100,000`.
+
+
+Finding Future Worth (F) when Given Present Value (P)
+---
+If an amount of P dollars is invested at a point in time and i% is the interest (profit or growth) rate per periode, the amount will grow to a future amount of P + Pi = P(1+i) by the end of one period; by the end of two periods, the amount will grow to P(1+i)(1+i)=P(1+i)^{3}; by the end of N periods the amount will grow to:
+
+$$F = P(1+i)^{N}$$
+or in excel formula:
+$$F = FV(rate,nper,annuity payment,present value)$$
+
+Escalation Formula
+---
+>CFM56-7B24E and CFM56-7B26E escalation formula, spare engine and major module, price escalation formula describe as follows: 
+$$Pa = (P + B) * (L + M) - P$$
+$$B =  0.005 * \frac{N}{12} * P$$
+$$L = 0.65 * \frac{ECI}{ECI base}$$
+$$M = 0.35 * \frac{ICI}{ICI base}$$
+
+>LEAP-1A26 escalation formula, spare engine and major module, price escalation formula describe as follows:
+$$Pn = (Pb + F) * (\frac{CPI}{CPI base})$$
+$$CPI = (0.65 * L) + (0.35 * IC)$$
+$$F = 0.005 * n * Pb$$
+
+>LEAP-1B27 and LEAP-1B25 escalation formula, spare engine and major module, price escalation formula describe as follows: 
+$$Pa = (P + B) * (L + M) - P$$
+$$B =  0.005 * \frac{N}{12} * P$$
+$$L = 0.65 * \frac{ECI}{ECI base}$$
+$$M = 0.35 * \frac{ICI}{ICI base}$$
+
+
+Where,
+
+Pa = Spare Engine/Major Module Price Adjustment.
+
+Pn = Final Invoice Price.
+
+P = Spare Engine/Major Module base price as quoted by CFM.
+
+L =A value using the "Employment Cost Index for Workers in Aerospace Manufacturing" (North American Industrial Classification System (NAICS)Code 336411, base month and year December 2005 = 100).
+
+ECI = A value using the "Employment Cost Index for Workers in Aerospace Manufacturing" (North American Industrial Classification System (NAICS) Code 336411, base month and year December 2005 = 100).
+
+IC= The Industrial Commodities Index (IC) for such month shall be deemed to mean the three month arithmetic average.
+
+After determining value of ECI and ICI for 6 months prior of three months arithmetic average, we can calculate the escalation price prior to escalation cap, and the final calculation is total equal adjusted price: `price with escalation cap, and price with normal escalation without escalation cap.`
+
+
+Employment Cost Index (ECI), Industrial Commodities Index (ICI)
+---
+>Business firms in search of effective methods for coping with changes in prices often employ price adjustment (escalation) clauses in long-term sales and purchase contracts. Bureau of Labor Statistics (BLS) estimates that agreements with a lifetime worth in the trillions of dollars are currently adjusted using the Employment Cost Index (ECI) and Producer Price Index (PPI) family of indexes, either alone or in conjunction with other sources of economic data.
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library("DT")
+dataecicfm56 <- read.csv("eci_cfm_leap1b.csv")
+datatable(dataecicfm56,caption="CFM56-7B24E and CFM56-7B26E ECI Data", rownames=T, filter="top", options=list(pageLength = 10, scrollX=T))
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library("DT")
+dataicicfm56 <- read.csv("ici_cfm_leap1b.csv")
+datatable(dataicicfm56,caption="CFM56-7B24E and CFM56-7B26E ICI Data", rownames=T, filter="top", options=list(pageLength = 10, scrollX=T))
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library("DT")
+dataecileap1a <- read.csv("eci_leap1a.csv")
+datatable(dataecileap1a,caption="LEAP-1A26 ECI Data", rownames=T, filter="top", options=list(pageLength = 10, scrollX=T))
+
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library("DT")
+dataicileap1a <- read.csv("ici_leap1a.csv")
+datatable(dataicileap1a,caption="LEAP-1A26 ICI Data", rownames=T, filter="top", options=list(pageLength = 10, scrollX=T))
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library("DT")
+dataecileap1b <- read.csv("eci_cfm_leap1b.csv")
+datatable(dataecileap1b,caption="LEAP-1B27 and LEAP-1B25 ECI Data", rownames=T, filter="top", options=list(pageLength = 10, scrollX=T))
+
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library("DT")
+dataicileap1b <- read.csv("ici_cfm_leap1b.csv")
+datatable(dataicileap1b,caption="LEAP-1B27 and LEAP-1B25 ICI Data", rownames=T, filter="top", options=list(pageLength = 10, scrollX=T))
+
+```
+
+
+Total Equal Adjusted Engine Price of CFM56-7B24E, CFM56-7B26E, LEAP-1A26, LEAP-1B27, LEAP-1B25
+---
+>Total equal adjusted price that has been stated on Letter Agreement No. 2 - GTA No. CFM-1-193764669 is a portion of the base price procedure that sometimes companied identifies a portion of the base price to be adjusted by a selected PPI/ICI/ECI, while the balance remains fixed.
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library("DT")
+datatotal <- read.csv("price_totaladjustmentprice.csv")
+datatable(datatotal,caption="TOTAL EQUAL ADJUSTED ENGINE PRICE", rownames=T, filter="top", options=list(pageLength = 15, scrollX=T))
+
+```
+
+
+##Graph of Total Equal Adjusted Engine Price##
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library ("highcharter")
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+data <- read.csv("price_totaladjustmentprice.csv")
+
+hc <- highchart() %>% 
+  hc_xAxis(categories = data$date) %>% 
+  hc_add_series(name = "CFM56_7B24E", data = data$CFM56_7B24E) %>% 
+  hc_add_series(name = "CFM56_7B26E", data = data$CFM56_7B26E) 
+hc 
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+data <- read.csv("price_totaladjustmentprice.csv")
+
+hc <- highchart() %>% 
+  hc_xAxis(categories = data$date) %>% 
+  hc_add_series(name = "LEAP_1A26", data = data$LEAP_1A26) %>% 
+  hc_add_series(name = "LEAP_1B27", data = data$LEAP_1B27) %>%
+  hc_add_series(name = "LEAP_1B25", data = data$LEAP_1B25)
+hc 
+```
+
+
+---
+
+
+
+
+
+
+
+
+
